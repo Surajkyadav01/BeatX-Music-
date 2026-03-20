@@ -30,7 +30,12 @@ const myFixedSongs = [
     { name: 'Sanson Ki Mala', artist: 'Rahat Fateh Ali Khan', img: 'https://image2url.com/r2/default/images/1773866445142-a5076e4b-a813-4553-9de7-72170dc2c85f.jpg', url: 'https://image2url.com/r2/default/audio/1773866292593-eeb5fc72-d3b0-4e77-9a8d-0c3076fec763.mp3' },
     { name: 'Chaap Tilak', artist: 'Nakash Aziz', img: 'https://image2url.com/r2/default/images/1773866751399-f93751a0-62b4-4dd4-811d-3f02024650f4.jpg', url: 'https://image2url.com/r2/default/audio/1773866515382-37a07c64-a3a1-40e4-a311-a97cba1f50f1.mp3' },
     { name: 'Sukoon', artist: 'Arijit Singh', img: 'https://image2url.com/r2/default/images/1773914133996-4f05ec84-8944-4d10-8565-635d99213067.jpg', url: 'https://image2url.com/r2/default/audio/1773913962606-27f9484e-9948-4ef9-9969-e93fd31a0208.mp3' },
-    { name: 'Mitti Ke Bete', artist: 'Mithoon', img: 'https://image2url.com/r2/default/images/1774008590271-1bf98070-1f16-4dc5-a0b6-33122f0962a1.jpg', url: 'https://image2url.com/r2/default/audio/1774008803176-8e5f8f3c-dd61-4e48-ac3f-11b6cb026593.mp3' },
+  { 
+    name: 'Mitti Ke Bete', 
+    artist: 'Mithoon', 
+    img: 'https://image2url.com/r2/default/images/1774008590271-1bf98070-1f16-4dc5-a0b6-33122f0962a1.jpg', 
+    url: 'https://image2url.com/r2/default/audio/1774008803176-8e5f8f3c-dd61-4e48-ac3f-11b6cb026593.mp3' },
+
 
 ];
 
