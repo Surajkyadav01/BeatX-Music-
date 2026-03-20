@@ -108,9 +108,13 @@
             <div class="grid-2x4" id="cloudGrid">
                 <p style="font-size: 10px; color: #666; padding-left: 5px;">Fetching from cloud...</p>
             </div>
+
+            <!-- NAYA BHAKTI SECTION YAHAN HAI -->
+            <h3 style="color: #FFD700; margin: 20px 0 10px 0;">Bhakti Collection</h3>
+            <div class="grid-2x4" id="bhaktiGrid"></div>
         </main>
 
-        <!-- MINI PLAYER (Modified to trigger expand) -->
+        <!-- MINI PLAYER -->
         <footer class="music-player" id="mainPlayer" onclick="expandPlayer()">
             <div class="song-bar">
                 <div class="song-details">
@@ -121,7 +125,6 @@
                 </div>
                 <div class="player-icons">
                     <i class="fas fa-headphones-alt" style="color:#1db954"></i>
-                    <!-- Added stopPropagation to prevent mini buttons from opening full player -->
                     <i class="fas fa-play" id="masterPlay" onclick="event.stopPropagation(); togglePlay()"></i>
                     <i class="fas fa-times" onclick="event.stopPropagation(); closePlayer()" style="cursor: pointer;"></i>
                 </div>
@@ -159,7 +162,6 @@
                 <h2 id="full-player-title">Song Name</h2>
                 <p id="full-player-artist">Artist Name</p>
             </div>
-            <!-- Progress Bar with Skip Logic -->
             <div class="full-progress-wrapper" onclick="seekAudioFull(event)">
                 <div class="full-progress-container">
                     <div class="full-progress-bar" id="fullProgressBar"></div>
@@ -199,6 +201,14 @@
             <input type="text" id="cArtist" placeholder="Singer ka Naam">
             <input type="url" id="cImg" placeholder="Image URL (Thumbnail)">
             <input type="url" id="cUrl" placeholder="Audio URL (Link)">
+            
+            <!-- NAYA DROPDOWN YAHAN HAI -->
+            <label style="color:#aaa; font-size:12px; display:block; text-align:left; margin-bottom:5px;">Select Category:</label>
+            <select id="cCategory" style="width:100%; margin-bottom:15px; padding:10px; border-radius:5px; background:#333; color:white; border:1px solid #444;">
+                <option value="bollywood">Your Collection</option>
+                <option value="bhakti">Bhakti Song</option>
+            </select>
+
             <button onclick="saveToCloud()" class="save-btn">Upload to Cloud</button>
             <button onclick="toggleDeleteMode()" style="background:#444; margin-top:10px; color:white; border:none; padding:10px; border-radius:6px; width:100%; cursor:pointer;">Enable Admin Delete</button>
             <p onclick="closePopups()" style="margin-top:15px; font-size:12px; color:#b3b3b3; cursor:pointer;">Go Back</p>
