@@ -26,8 +26,7 @@
 
 ## 📸 Screenshots
 
-> *Tip: Yahan apne project ka ek badhiya sa screenshot ya screen-recording ka GIF laga dena.*
-> `![BeatX Preview](your-image-url-here)`
+(https://image2url.com/r2/default/images/1774004651674-d935e66e-8eaf-4025-b9a3-c5898b7abf72.png)`
 
 ---
 
@@ -35,7 +34,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/your-username/BeatX-Music.git](https://github.com/your-username/BeatX-Music.git)
+   git clone [https://github.com/your-username/BeatX-Music.git](https://surajkyadav01.github.io/BeatX-Music-/)
 ⚠️ Disclaimer 
    This is an educational project created for learning purposes. It demonstrates API integration, Firebase connectivity, and modern frontend development. All music data belongs to the respective owners.
 Developed with ❤️ by Suraj Yadav
