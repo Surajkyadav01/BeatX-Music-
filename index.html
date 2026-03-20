@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BeatX Music </title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatX - Premium Music</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- 1. SIDEBAR MENU -->
+    <div id="sideDrawer" class="side-drawer">
+        <div class="drawer-header">
+            <div class="profile-section">
+                <span class="tag profile-large">S</span>
+                <div class="profile-info">
+                    <h2>Suraj Yadav</h2>
+                    <p>View profile</p>
+                </div>
+            </div>
+            <i class="fas fa-times close-drawer" onclick="toggleDrawer()"></i>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-item"><i class="fas fa-plus"></i><span>Add account</span></div>
+            <div class="drawer-item"><i class="fas fa-bolt"></i><span>What's new</span></div>
+            <div class="drawer-item"><i class="fas fa-history"></i><span>Recents</span></div>
+            <div class="drawer-item"><i class="fas fa-bullhorn"></i><span>Your Updates</span></div>
+            <div class="drawer-item" onclick="showPage('privacyPage')"><i class="fas fa-cog"></i><span>Settings and privacy</span></div>
+            <div class="drawer-item" onclick="showPage('aboutPage')"><i class="fas fa-info-circle"></i><span>About</span></div>
+        </div>
+    </div>
+    <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
+
+    <!-- 2. SEPARATE ABOUT PAGE -->
+    <div id="aboutPage" class="screen-overlay">
+        <header class="sub-header">
+            <i class="fas fa-arrow-left" onclick="hidePage('aboutPage')"></i>
+            <h3>About BeatX</h3>
+        </header>
+        <div class="sub-content">
+            <h4>About Me</h4>
+            <p>Hi, I'm Suraj Yadav. I am a passionate BCA student with a goal of becoming a Full-Stack Developer. Alongside coding, I possess fundamental knowledge of Cyber Security, which helps me build secure and high-performance applications.</p>
+            <p>BeatX is my dream project, created to provide music lovers with a sleek, fast, and premium interface.</p>
+        </div>
+    </div>
+
+    <!-- 3. SEPARATE PRIVACY PAGE -->
+    <div id="privacyPage" class="screen-overlay">
+        <header class="sub-header">
+            <i class="fas fa-arrow-left" onclick="hidePage('privacyPage')"></i>
+            <h3>Settings & Privacy</h3>
+        </header>
+        <div class="sub-content">
+            <h4>Privacy Policy</h4>
+            <p>BeatX is an educational project. We do not store any personal private data (such as passwords or private files) without explicit permission.</p>
+            <p>Any song added via the "Create" section is saved on Firebase Cloud, allowing you to access your collection from anywhere.</p>
+            <p>We use industry-standard security best practices to ensure a safe user experience.</p>
+        </div>
+    </div>
+
+    <div class="spotify-app">
+        <header class="top-tags">
+            <span class="tag profile" onclick="toggleDrawer()">S</span>
+            <span class="tag active">All</span>
+            <span class="tag">Music</span>
+            <span class="tag">Podcasts</span>
+            <span class="sonic-logo">Beat<span class="x-pink">X</span> <span class="dj-speaker">🎧</span></span>
+        </header>
+
+        <main class="main-content">
+            <div class="search-wrapper" id="searchSection">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for songs..." oninput="searchSongs()">
+                </div>
+                <button class="search-btn" onclick="searchSongs()">Search</button>
+            </div>
+
+            <section id="resultsSection" style="display:none; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #1db954;">Search Results</h3>
+                    <i class="fas fa-times" onclick="clearSearch()" style="cursor: pointer; color: #b3b3b3; font-size: 20px;"></i>
+                </div>
+                <div id="apiResults" class="grid-2x4"></div>
+            </section>
+    
+            <h3>Your Favorites</h3>
+            <div class="grid-2x4" id="favGrid"></div>
+
+            <h3>Recommended for today</h3>
+            <div class="grid-2x4" id="recommendedGrid"></div>
+
+            <h3 style="color: #1db954; margin-top: 20px;">Your Collection</h3>
+            <div class="grid-2x4" id="cloudGrid">
+                <p style="font-size: 10px; color: #666; padding-left: 5px;">Fetching from cloud...</p>
+            </div>
+        </main>
+
+        <!-- MINI PLAYER (Modified to trigger expand) -->
+        <footer class="music-player" id="mainPlayer" onclick="expandPlayer()">
+            <div class="song-bar">
+                <div class="song-details">
+                    <img id="player-img" src="" alt="">
+                    <div class="text-scroll-container">
+                        <div id="player-title" class="scrolling-text"></div>
+                    </div>
+                </div>
+                <div class="player-icons">
+                    <i class="fas fa-headphones-alt" style="color:#1db954"></i>
+                    <!-- Added stopPropagation to prevent mini buttons from opening full player -->
+                    <i class="fas fa-play" id="masterPlay" onclick="event.stopPropagation(); togglePlay()"></i>
+                    <i class="fas fa-times" onclick="event.stopPropagation(); closePlayer()" style="cursor: pointer;"></i>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </footer>
+
+        <nav class="bottom-menu">
+            <div class="menu-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <i class="fas fa-home"></i><span>Home</span>
+            </div>
+            <div class="menu-item" onclick="document.getElementById('searchSection').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-search"></i><span>Search</span>
+            </div>
+            <div class="menu-item"><i class="fas fa-list-ul"></i><span>Library</span></div>
+            <div class="menu-item" onclick="askPassword()"><i class="fas fa-plus-square"></i><span>Create</span></div>
+        </nav>
+    </div>
+
+    <!-- FULL SCREEN EXPANDABLE PLAYER -->
+    <div id="fullPlayer" class="full-player-overlay">
+        <div class="full-header">
+            <i class="fas fa-chevron-down" onclick="minimizePlayer()"></i>
+            <div class="header-text">
+                <small>PLAYING FROM COLLECTION</small>
+                <p>BeatX Premium</p>
+            </div>
+            <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="full-body">
+            <img id="full-player-img" src="" alt="">
+            <div class="full-song-info">
+                <h2 id="full-player-title">Song Name</h2>
+                <p id="full-player-artist">Artist Name</p>
+            </div>
+            <!-- Progress Bar with Skip Logic -->
+            <div class="full-progress-wrapper" onclick="seekAudioFull(event)">
+                <div class="full-progress-container">
+                    <div class="full-progress-bar" id="fullProgressBar"></div>
+                </div>
+                <div class="time-info">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalDuration">0:00</span>
+                </div>
+            </div>
+            <div class="full-controls">
+                <i class="fas fa-random"></i>
+                <i class="fas fa-step-backward" onclick="prevSong()"></i>
+                <i class="fas fa-play-circle" id="fullMasterPlay" onclick="togglePlay()" style="font-size: 65px;"></i>
+                <i class="fas fa-step-forward" onclick="nextSong()"></i>
+                <i class="fas fa-redo"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="passwordOverlay" class="premium-overlay">
+        <div class="password-box">
+            <i class="fas fa-lock" style="font-size: 30px; color: #1db954; margin-bottom: 15px;"></i>
+            <h3>Admin Access</h3>
+            <p style="font-size: 12px; color: #b3b3b3; margin-bottom: 15px;">Enter password to add music</p>
+            <input type="password" id="passInput" placeholder="Password">
+            <div style="display: flex; gap: 10px; width: 100%;">
+                <button onclick="closePopups()" style="background:#444">Cancel</button>
+                <button onclick="verifyPassword()">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="createOverlay" class="premium-overlay">
+        <div class="create-box">
+            <h3 style="color:#1db954; margin-bottom: 20px;">Add New Song</h3>
+            <input type="text" id="cName" placeholder="Gane ka Naam">
+            <input type="text" id="cArtist" placeholder="Singer ka Naam">
+            <input type="url" id="cImg" placeholder="Image URL (Thumbnail)">
+            <input type="url" id="cUrl" placeholder="Audio URL (Link)">
+            <button onclick="saveToCloud()" class="save-btn">Upload to Cloud</button>
+            <button onclick="toggleDeleteMode()" style="background:#444; margin-top:10px; color:white; border:none; padding:10px; border-radius:6px; width:100%; cursor:pointer;">Enable Admin Delete</button>
+            <p onclick="closePopups()" style="margin-top:15px; font-size:12px; color:#b3b3b3; cursor:pointer;">Go Back</p>
+        </div>
+    </div>
+
+    <audio id="audioElement"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
