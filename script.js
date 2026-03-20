@@ -13,9 +13,9 @@ const db = firebase.firestore();
 // --- DOM Elements ---
 const audio = document.getElementById('audioElement');
 const masterPlay = document.getElementById('masterPlay');
-const fullMasterPlay = document.getElementById('fullMasterPlay'); // Naya element
+const fullMasterPlay = document.getElementById('fullMasterPlay');
 const progressBar = document.getElementById('progressBar');
-const fullProgressBar = document.getElementById('fullProgressBar'); // Naya element
+const fullProgressBar = document.getElementById('fullProgressBar');
 const progressContainer = document.querySelector('.progress-container');
 const adminPassword = "Sunil";
 
@@ -30,13 +30,7 @@ const myFixedSongs = [
     { name: 'Sanson Ki Mala', artist: 'Rahat Fateh Ali Khan', img: 'https://image2url.com/r2/default/images/1773866445142-a5076e4b-a813-4553-9de7-72170dc2c85f.jpg', url: 'https://image2url.com/r2/default/audio/1773866292593-eeb5fc72-d3b0-4e77-9a8d-0c3076fec763.mp3' },
     { name: 'Chaap Tilak', artist: 'Nakash Aziz', img: 'https://image2url.com/r2/default/images/1773866751399-f93751a0-62b4-4dd4-811d-3f02024650f4.jpg', url: 'https://image2url.com/r2/default/audio/1773866515382-37a07c64-a3a1-40e4-a311-a97cba1f50f1.mp3' },
     { name: 'Sukoon', artist: 'Arijit Singh', img: 'https://image2url.com/r2/default/images/1773914133996-4f05ec84-8944-4d10-8565-635d99213067.jpg', url: 'https://image2url.com/r2/default/audio/1773913962606-27f9484e-9948-4ef9-9969-e93fd31a0208.mp3' },
-  { 
-    name: 'Mitti Ke Bete', 
-    artist: 'Mithoon', 
-    img: 'https://image2url.com/r2/default/images/1774008590271-1bf98070-1f16-4dc5-a0b6-33122f0962a1.jpg', 
-    url: 'https://image2url.com/r2/default/audio/1774008803176-8e5f8f3c-dd61-4e48-ac3f-11b6cb026593.mp3' },
-
-
+    { name: 'Mitti Ke Bete', artist: 'Mithoon', img: 'https://image2url.com/r2/default/images/1774008590271-1bf98070-1f16-4dc5-a0b6-33122f0962a1.jpg', url: 'https://image2url.com/r2/default/audio/1774008803176-8e5f8f3c-dd61-4e48-ac3f-11b6cb026593.mp3' }
 ];
 
 // --- Audio Controls ---
@@ -44,31 +38,19 @@ function playSong(url, title, artist, img) {
     document.getElementById('mainPlayer').style.display = 'block';
     audio.src = url;
     audio.play();
-
-    // Mini Player Update
     document.getElementById('player-title').innerText = title + " • " + artist;
     document.getElementById('player-img').src = img;
     masterPlay.classList.replace('fa-play', 'fa-pause');
-
-    // Full Player Update (Dhyan se dekhiye, yahan image badi dikhegi)
     document.getElementById('full-player-img').src = img;
     document.getElementById('full-player-title').innerText = title;
     document.getElementById('full-player-artist').innerText = artist;
     if(fullMasterPlay) fullMasterPlay.classList.replace('fa-play-circle', 'fa-pause-circle');
-
     currentSongIndex = allSongs.findIndex(s => s.url === url);
 }
 
-// Expand & Minimize Functions
-function expandPlayer() {
-    document.getElementById('fullPlayer').classList.add('active');
-}
+function expandPlayer() { document.getElementById('fullPlayer').classList.add('active'); }
+function minimizePlayer() { document.getElementById('fullPlayer').classList.remove('active'); }
 
-function minimizePlayer() {
-    document.getElementById('fullPlayer').classList.remove('active');
-}
-
-// Next & Previous Logic
 function nextSong() {
     if (currentSongIndex < allSongs.length - 1) {
         currentSongIndex++;
@@ -85,36 +67,25 @@ function prevSong() {
     }
 }
 
-audio.onended = () => {
-    nextSong(); // Auto-play next song
-};
+audio.onended = () => { nextSong(); };
 
-// Seek logic for Mini Player
 progressContainer.addEventListener('click', (e) => {
     const width = progressContainer.clientWidth;
     const clickX = e.offsetX;
     audio.currentTime = (clickX / width) * audio.duration;
 });
 
-// Seek logic for Full Player (Skip logic)
 function seekAudioFull(e) {
     const rect = document.querySelector('.full-progress-container').getBoundingClientRect();
     const x = e.clientX - rect.left;
     audio.currentTime = (x / rect.width) * audio.duration;
 }
 
-// Syncing both Progress Bars & Time
 audio.ontimeupdate = () => {
     if (audio.duration) {
         let percent = (audio.currentTime / audio.duration) * 100;
-        
-        // Mini Bar
         if(progressBar) progressBar.style.width = percent + "%";
-        
-        // Full Bar
         if(fullProgressBar) fullProgressBar.style.width = percent + "%";
-
-        // Time Update
         document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
         document.getElementById('totalDuration').innerText = formatTime(audio.duration);
     }
@@ -138,7 +109,7 @@ function togglePlay() {
     }
 }
 
-// --- Admin & Delete Features (No Changes Here) ---
+// --- Admin & Delete Features ---
 function askPassword() { document.getElementById('passwordOverlay').style.display = 'flex'; }
 function closePopups() { document.getElementById('passwordOverlay').style.display = 'none'; document.getElementById('createOverlay').style.display = 'none'; }
 
@@ -167,16 +138,30 @@ function deleteSong(docId, event) {
     }
 }
 
+// --- CATEGORY SAVE LOGIC (SET HERE) ---
 function saveToCloud() {
     const name = document.getElementById('cName').value;
     const artist = document.getElementById('cArtist').value;
     const img = document.getElementById('cImg').value;
     const url = document.getElementById('cUrl').value;
-    if (!name || !artist || !img || !url) return alert("Fill all!");
+    const category = document.getElementById('cCategory').value; // Nayi line set
 
-    db.collection("songs").add({ 
-        name, artist, img, url, timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-    }).then(() => { closePopups(); });
+    if (!name || !artist || !img || !url) return alert("Bhai, saari details bharo!");
+
+    db.collection("songs").add({
+        name: name,
+        artist: artist,
+        img: img,
+        url: url,
+        category: category, // Category yahan save ho rahi hai
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        closePopups();
+        document.getElementById('cName').value = '';
+        document.getElementById('cArtist').value = '';
+        document.getElementById('cImg').value = '';
+        document.getElementById('cUrl').value = '';
+    });
 }
 
 // --- UI Rendering ---
@@ -197,34 +182,35 @@ function cardHtml(s, docId = null) {
     </div>`;
 }
 
+// --- CATEGORY SNAPSHOT LOGIC (SET HERE) ---
 function loadContent() {
     document.getElementById('favGrid').innerHTML = myFixedSongs.slice(0, 2).map(s => cardHtml(s)).join('');
-    document.getElementById('recommendedGrid').innerHTML = myFixedSongs.slice(2, 8).map(s => cardHtml(s)).join('');
+    document.getElementById('recommendedGrid').innerHTML = myFixedSongs.slice(2, 6).map(s => cardHtml(s)).join('');
     
     db.collection("songs").orderBy("timestamp", "desc").onSnapshot(snap => {
-        const cloudGrid = document.getElementById('cloudGrid');
         const cloudSongs = snap.docs.map(doc => ({ ...doc.data(), docId: doc.id }));
-        allSongs = [...myFixedSongs, ...cloudSongs];
+        
+        // 1. Bollywood filter
+        const bollywoodSongs = cloudSongs.filter(s => s.category !== 'bhakti');
+        document.getElementById('cloudGrid').innerHTML = bollywoodSongs.length > 0 ? 
+            bollywoodSongs.map(s => cardHtml(s, s.docId)).join('') : "<p style='font-size:10px; color:#666;'>No Bollywood music.</p>";
 
-        if (snap.empty) {
-            cloudGrid.innerHTML = "<p style='font-size:10px; padding:10px; color: #666;'>No cloud music.</p>";
-        } else {
-            cloudGrid.innerHTML = cloudSongs.map(s => cardHtml(s, s.docId)).join('');
-        }
+        // 2. Bhakti filter
+        const bhaktiSongsOnly = cloudSongs.filter(s => s.category === 'bhakti');
+        document.getElementById('bhaktiGrid').innerHTML = bhaktiSongsOnly.length > 0 ? 
+            bhaktiSongsOnly.map(s => cardHtml(s, s.docId)).join('') : "<p style='font-size:10px; color:#666;'>No Bhakti music.</p>";
+
+        allSongs = [...myFixedSongs, ...cloudSongs];
     });
 }
 
-// --- API Suggestion Search ---
+// --- Search Logic ---
 async function searchSongs() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     const resultsContainer = document.getElementById('apiResults');
     const resultsSection = document.getElementById('resultsSection');
 
-    if (query.length < 2) { 
-        resultsSection.style.display = "none"; 
-        return; 
-    }
-
+    if (query.length < 2) { resultsSection.style.display = "none"; return; }
     resultsSection.style.display = "block";
     resultsContainer.innerHTML = "<p style='color:#1db954; padding:10px;'>Suggesting songs...</p>";
 
@@ -236,30 +222,21 @@ async function searchSongs() {
             let finalResults = [];
 
             if (res.success && res.data.results.length > 0) {
-                const apiSongs = res.data.results.map(s => ({
+                finalResults = res.data.results.map(s => ({
                     name: s.name,
                     artist: s.artists.primary[0].name,
                     img: s.image[2].url, 
                     url: s.downloadUrl[4].url 
                 }));
-                finalResults = [...apiSongs];
             }
 
-            const localFiltered = allSongs.filter(s => 
-                s.name.toLowerCase().includes(query) || 
-                s.artist.toLowerCase().includes(query)
-            );
-            
+            const localFiltered = allSongs.filter(s => s.name.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query));
             finalResults = [...finalResults, ...localFiltered];
 
-            if (finalResults.length > 0) {
-                resultsContainer.innerHTML = finalResults.map(s => cardHtml(s)).join('');
-            } else {
-                resultsContainer.innerHTML = "<p style='padding:15px; color:#ff0055;'>No matching songs.</p>";
-            }
+            resultsContainer.innerHTML = finalResults.length > 0 ? 
+                finalResults.map(s => cardHtml(s)).join('') : "<p style='padding:15px; color:#ff0055;'>No matching songs.</p>";
         } catch (err) {
-            const localOnly = allSongs.filter(s => s.name.toLowerCase().includes(query));
-            resultsContainer.innerHTML = localOnly.map(s => cardHtml(s)).join('');
+            resultsContainer.innerHTML = allSongs.filter(s => s.name.toLowerCase().includes(query)).map(s => cardHtml(s)).join('');
         }
     }, 400);
 }
@@ -267,20 +244,11 @@ async function searchSongs() {
 window.onload = loadContent;
 function closePlayer() { audio.pause(); document.getElementById('mainPlayer').style.display = 'none'; minimizePlayer(); }
 function clearSearch() { document.getElementById('resultsSection').style.display = "none"; document.getElementById('searchInput').value = ""; }
-
 function toggleDrawer() {
     const drawer = document.getElementById('sideDrawer');
     const overlay = document.getElementById('drawerOverlay');
     drawer.classList.toggle('open');
     overlay.style.display = drawer.classList.contains('open') ? 'block' : 'none';
 }
-
 function showPage(pageId) { document.getElementById(pageId).style.display = 'flex'; }
 function hidePage(pageId) { document.getElementById(pageId).style.display = 'none'; }
-
-// Swipe logic
-let startX;
-document.getElementById('sideDrawer').addEventListener('touchstart', e => startX = e.touches[0].clientX);
-document.getElementById('sideDrawer').addEventListener('touchend', e => {
-    if (startX - e.changedTouches[0].clientX > 50) toggleDrawer();
-});
